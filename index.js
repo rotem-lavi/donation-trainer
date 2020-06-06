@@ -18,4 +18,7 @@ express()
         const modelCode = modelRunner(req.body);
         res.send(modelConvertor(modelCode))
     })
+    .get('/healthcheck', (req, res) => {
+        res.send("OK")
+    })
     .listen(PORT, () => console.log(`Listening on ${PORT}`))
