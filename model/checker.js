@@ -1,4 +1,4 @@
-const THRESHOLD = 0.001
+const THRESHOLD = 0.01;
 
 const BUILDINGS = [
     {
@@ -41,8 +41,7 @@ const checker = (network) => {
     for (const building of BUILDINGS) {
         const {currentYearEarnings} = network.run(building.data);
 
-        // TODO: currentYearEarnings > building.acceptanceOutput + THRESHOLD
-        if (currentYearEarnings < 0) {
+        if (currentYearEarnings < 0 || currentYearEarnings > building.acceptanceOutput + THRESHOLD) {
             return false;
         }
     }
