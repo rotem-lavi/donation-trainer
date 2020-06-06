@@ -1,7 +1,6 @@
 const neighborhoodsData = require("../seed_data/neighborhoods.json");
 
 const networkConfig = {
-    binaryThresh: 0.5,
     activation: 'tanh',
 }
 

@@ -1,6 +1,8 @@
 const brain = require("brain.js");
-const {FILED_TO_STANDERIZER, STANDARDIZE_INPUTS, STANDARDIZE_NEIGHBORHOOD, OUTPUT, networkConfig} = require('./consts')
+const {FILED_TO_STANDERIZER, STANDARDIZE_INPUTS, OUTPUT, networkConfig} = require('./consts')
+const checker = require('./checker')
 
+const MAX_ITERATIONS = 100000;
 
 /*
 1 record in raw data:
@@ -8,6 +10,14 @@ const {FILED_TO_STANDERIZER, STANDARDIZE_INPUTS, STANDARDIZE_NEIGHBORHOOD, OUTPU
  currentYearEarnings = last donation
  lastYearEarnings = what we expected in the modal
  */
+
+
+const shuffleModalRecords = (records) => {
+    return records.map(r => ({
+        ...r,
+        output: {...r.output, currentYearEarnings: r.currentYearEarnings + Math.abs(Math.random())}
+    }))
+}
 
 const train = (rawData) => {
     const net = new brain.NeuralNetwork(networkConfig);
@@ -17,7 +27,28 @@ const train = (rawData) => {
         .map(encodeRecord)
         .map(buildNetworkRecord);
 
-    net.train(networkRecords);
+    let isOk = false;
+    let iterations = 0;
+
+    do {
+        let networkRecordsToTrain = [...networkRecords];
+        if (iterations >= 3) {
+            // Helping the modal a bit
+            console.log("Shuffling records")
+            networkRecordsToTrain = shuffleModalRecords(networkRecordsToTrain)
+        }
+
+        iterations++;
+
+        net.train(networkRecordsToTrain, {
+            errorThresh: 0.001, // the acceptable error percentage from training data
+        });
+
+        isOk = checker(net) || iterations >= MAX_ITERATIONS
+    } while (!isOk);
+
+    if (iterations >= MAX_ITERATIONS)
+        console.log("Max iterations was hit")
 
     return net.toFunction().toString();
 }

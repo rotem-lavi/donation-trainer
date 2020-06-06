@@ -4,7 +4,7 @@ const convertModelToPy = (modelCode) => {
         .replace(") {", "")
         .replace("return", "")
         .replace(";", "")
-        .replace(/Math\.tanh/g, "math.tanh")
+        .replace(/Math\./g, "math.")
         .replace(/\|\|/g, " or ")
         .trim()
         .slice(0, -1)
