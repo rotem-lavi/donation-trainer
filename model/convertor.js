@@ -1,4 +1,4 @@
-const convertModelToPy = (modelCode) => {
+module.exports = (modelCode) => {
     return modelCode
         .replace("function anonymous(input", "")
         .replace(") {", "")
@@ -9,6 +9,4 @@ const convertModelToPy = (modelCode) => {
         .trim()
         .slice(0, -1)
         .trim();
-}
-
-module.exports = convertModelToPy
+};
