@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan')
 
 const modelRunner = require("./model");
-const modelConvertor = require("./modelConvertor");
 const authorizeMiddleware = require("./authorizeMiddleware")
 const PORT = process.env.PORT || 5001
 
@@ -15,10 +14,13 @@ express()
     .use(bodyParser.json())
     .use(authorizeMiddleware)
     .post('/train', (req, res) => {
-        const modelCode = modelRunner(req.body);
-        res.send(modelConvertor(modelCode));
+        res.send(modelRunner(req.body));
     })
     .get('/healthcheck', (req, res) => {
         res.send("OK");
+    })
+    .use((err, req, res, next) => {
+        console.error(err);
+        res.status(500).send({error: 'Something failed!'});
     })
     .listen(PORT, () => console.log(`Listening on ${PORT}`))

@@ -1,6 +1,8 @@
 const brain = require("brain.js");
 const {FILED_TO_STANDERIZER, STANDARDIZE_INPUTS, OUTPUT, networkConfig} = require('./consts')
 const checker = require('./checker')
+const convertModelToPy = require('./convertor');
+const generationNetworkTrainer = require('./generationNetwork')
 
 const MAX_ITERATIONS = 100000;
 
@@ -20,6 +22,10 @@ const shuffleModalRecords = (records) => {
 }
 
 const train = (rawData) => {
+    if (rawData.length === 0) {
+        throw new Error("Missing model data")
+    }
+
     const net = new brain.NeuralNetwork(networkConfig);
 
     const networkRecords = rawData
@@ -47,10 +53,13 @@ const train = (rawData) => {
         isOk = checker(net) || iterations >= MAX_ITERATIONS
     } while (!isOk);
 
-    if (iterations >= MAX_ITERATIONS)
-        console.log("Max iterations was hit")
+    if (iterations >= MAX_ITERATIONS) {
+        // Model isn't good, trying with a base of
+        console.log("Max iterations was hit, moving to: generationNetworkTrainer");
+        return generationNetworkTrainer(rawData);
+    }
 
-    return net.toFunction().toString();
+    return convertModelToPy(net.toFunction().toString());
 }
 
 
