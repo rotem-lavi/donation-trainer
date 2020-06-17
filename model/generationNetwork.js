@@ -21,7 +21,7 @@ module.exports = (rawData) => {
     // Calculate
     const finalData = {};
     for (const [neighborhoodName, neighborhoodData] of Object.entries(parsedData)) {
-        finalData[neighborhoodName] = neighborhoodData.totalEarnings / neighborhoodData.totalFloors;
+        finalData[neighborhoodName] = (neighborhoodData.totalEarnings / neighborhoodData.totalFloors) + (Math.random() / 10);
     }
 
     // Construct
