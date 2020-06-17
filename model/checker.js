@@ -41,7 +41,7 @@ const checker = (network) => {
     for (const building of BUILDINGS) {
         const {currentYearEarnings} = network.run(building.data);
 
-        if (currentYearEarnings < 0 || currentYearEarnings > building.acceptanceOutput + THRESHOLD || currentYearEarnings < building.acceptanceOutput + THRESHOLD) {
+        if (currentYearEarnings < 0 || currentYearEarnings > building.acceptanceOutput + THRESHOLD) {
             return false;
         }
     }
