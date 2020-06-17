@@ -40,7 +40,7 @@ const train = (rawData) => {
         let networkRecordsToTrain = [...networkRecords];
         if (iterations >= 3) {
             // Helping the modal a bit
-            if (iterations === 3) console.log("Shuffling records...")
+            if (iterations === 3) console.log("Shuffling records...");
             networkRecordsToTrain = shuffleModalRecords(networkRecordsToTrain)
         }
 
