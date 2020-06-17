@@ -23,9 +23,10 @@ module.exports = (rawData) => {
     for (const [neighborhoodName, neighborhoodData] of Object.entries(parsedData)) {
         finalData[neighborhoodName] = (neighborhoodData.totalEarnings / neighborhoodData.totalFloors) + (Math.random() / 10);
     }
+    finalData.unknown = (Object.values(finalData).reduce((a, c) => a + c, 0) / Object.keys(finalData).length) + (Math.random() / 10);
 
     // Construct
-    return `{'currentYearEarnings': ${JSON.stringify(finalData)}[str(input['neighborhoodName'])] * input['ms_komot']}`;
+    return `{'currentYearEarnings': ${JSON.stringify(finalData)}.get(str(input['neighborhoodName']), ${JSON.stringify(finalData)}['unknown']) * input['ms_komot']}`;
 }
 
 const safeParseFloat = (val) => {
